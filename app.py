@@ -46,3 +46,30 @@ if st.button("Register Artwork"):
     receipt = w3.eth.waitForTransactionReceipt(tx_hash)
     st.write("Transaction receipt mined:")
     st.write(dict(receipt))
+
+st.markdown("---")
+
+# Display a token
+st.markdown("## Display an Art Token")
+
+selected_address = st.selectbox("Select Account", options=accounts)
+
+tokens = contract.functions.balanceOf(selected_address).call()
+
+st.write(f"This address owns {tokens} tokens.")
+
+token_id = st.selectbox("Artwork Tokens", list(range(tokens)))
+
+if st.button("Display"):
+
+    # Use the contract's "OwnerOf" function to get the art tokens owner
+    owner = contract.functions.ownerOf(token_id).call()
+
+    st.write(f"The token is registered to {owner}")
+
+    # Use the contract's "tokenURI" function to get the art token's URI
+    token_uri = contract.functions.tokenURI(token_id).call()
+
+    st.write(f"The tokenURI is {token_uri}")
+    st.image(token_uri)
+    
